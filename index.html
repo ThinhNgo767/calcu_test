@@ -10,7 +10,6 @@
     <link rel="manifest" href="./manifest.json" />
   </head>
   <body>
-    <p id="copy-by">Copy By Louis</p>
     <div class="calculator">
       <div class="container">
         <input type="text" id="result" readonly />
@@ -24,8 +23,8 @@
         <button class="bgcolor--orange color--white" onclick="backspace()">
           C
         </button>
-        <button class="bgcolor--grey" onclick="addToResult('(')">(</button>
-        <button class="bgcolor--grey" onclick="addToResult(')')">)</button>
+        <button class="bgcolor--grey" onclick="toggleSign()">+/-</button>
+        <button class="bgcolor--grey" onclick="percent()">%</button>
 
         <button onclick="addToNumber('7')">7</button>
         <button onclick="addToNumber('8')">8</button>
@@ -61,7 +60,7 @@
         <ul id="historyList"></ul>
       </div>
     </div>
-
+    <p id="copy-by">Copy By Louis</p>
     <script src="./index.js"></script>
   </body>
 </html>

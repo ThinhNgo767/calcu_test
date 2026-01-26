@@ -2,8 +2,8 @@ const CACHE = "calculator-v1";
 const FILES = [
   "./",
   "./index.html",
-  "./style.css",
-  "./calculator.js",
+  "./index.css",
+  "./index.js",
   "./manifest.json",
 ];
 

@@ -60,7 +60,7 @@ button:active {
   color: #fff;
 }
 .bgcolor--blue {
-  background: #0400f7;
+  background: #00a6f4;
   color: #fff;
 }
 .bgcolor--grey {
@@ -72,10 +72,13 @@ button:active {
   font-size: 12px;
   border-bottom: 1px dashed #ccc;
 }
-
+.history-item {
+  user-select: none;
+  -webkit-user-select: none;
+}
 .container-btn {
   display: flex;
-  gap: 10px;
+  gap: 15px;
   margin-top: 10px;
 }
 #copy-by {
@@ -84,6 +87,11 @@ button:active {
   font-size: 0.8rem;
   font-style: italic;
   color: #888;
+}
+li.high-light {
+  color: #e7000b;
+  background-color: #ffff00;
+  font-weight: 400;
 }
 @media (max-width: 600px) {
   body {
@@ -103,17 +111,21 @@ button:active {
     grid-template-columns: repeat(4, 1fr);
     flex-grow: 1; /* Đẩy các nút chiếm không gian còn lại */
     align-content: flex-start;
-    grid-gap: 20px;
+    grid-gap: 15px;
     padding: 0 10px;
   }
   .calculator button {
-    width: 70px; /* Nút to hơn trên mobile cho dễ bấm */
-    height: 70px;
-    font-size: 25px;
+    width: 80px; /* Nút to hơn trên mobile cho dễ bấm */
+    height: 80px;
+    font-size: 36px;
   }
   .history-container {
     padding: 0 1rem;
     margin-bottom: 1rem;
+  }
+  .history-container h4 {
+    font-size: 24px;
+    margin-bottom: 10px;
   }
   .container-btn {
     padding: 0.5rem 0;
@@ -129,14 +141,22 @@ button:active {
   }
   #full-history,
   #clear-history {
-    font-size: 1rem;
+    color: #f2f2f2;
+    font-size: 1.2rem;
     width: max-content;
     height: 2rem;
     border-radius: 3px;
-    padding: 0 5px;
+    padding: 0 10px;
+  }
+  #full-history {
+    background-color: #f79f1b;
+  }
+  #clear-history {
+    background-color: #888;
   }
   .history-container li {
-    font-size: 16px;
-    padding: 5px 0;
+    max-width: calc(100% - 20px);
+    font-size: 20px;
+    padding: 3px 10px;
   }
 }

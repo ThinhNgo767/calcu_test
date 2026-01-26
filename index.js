@@ -15,19 +15,19 @@ let justCalculated = false;
 
 /* ===================== FORMAT ===================== */
 
-// format số để HIỂN THỊ (1.234,56)
 function formatNumber(numStr) {
   let [int, dec] = numStr.split(".");
   int = int.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   return dec !== undefined ? `${int},${dec}` : int;
 }
 
-// chuyển hiển thị -> nội bộ JS
 function displayToRaw(str) {
-  return str.replace(/\./g, "").replace(/,/g, ".");
+  return str
+    .replace(/\./g, "")
+    .replace(/,/g, ".")
+    .replace(/(\d+(\.\d+)?)%/g, "($1/100)");
 }
 
-// render lại toàn bộ biểu thức
 function renderExpression(raw) {
   return raw.replace(/\d+(\.\d+)?/g, (m) => formatNumber(m));
 }
@@ -37,7 +37,6 @@ function renderExpression(raw) {
 function isValidExpression(exp) {
   if (!exp) return false;
   if (/[+\-*/.(]$/.test(exp)) return false;
-
   try {
     Function(`"use strict"; return (${exp})`)();
     return true;
@@ -69,23 +68,54 @@ function addToNumber(n) {
   }
 
   let raw = displayToRaw(result.value);
+  let last = raw.split(/[+\-*/()]/).pop();
 
-  // ❗ chặn nhiều dấu thập phân trong cùng 1 số
-  let lastNumber = raw.split(/[+\-*/()]/).pop();
-  if (n === "." && lastNumber.includes(".")) return;
+  if (n === "." && last.includes(".")) return;
 
-  raw += n;
-  result.value = renderExpression(raw);
+  result.value += n === "." ? "," : n;
   autoCalculate();
 }
 
 function addToResult(op) {
-  let raw = displayToRaw(result.value);
-  if (!raw) return;
-  if (/[+\-*/.]$/.test(raw)) return;
+  if (!result.value) return;
+  if (/[+\-*/.%]$/.test(result.value)) return;
 
-  result.value = renderExpression(raw + op);
+  result.value += op;
   justCalculated = false;
+}
+
+/* ===================== +/- FIX ===================== */
+
+function toggleSign() {
+  let exp = result.value;
+  if (!exp) return;
+
+  let match = exp.match(/(.*?)(-?\(?\d+([.,]\d+)?\)?%?)$/);
+  if (!match) return;
+
+  let before = match[1];
+  let number = match[2];
+
+  if (number.startsWith("-(") && number.endsWith(")")) {
+    number = number.slice(2, -1);
+  } else {
+    number = `-(${number})`;
+  }
+
+  result.value = before + number;
+  autoCalculate();
+}
+
+/* ===================== % FIX ===================== */
+
+function percent() {
+  if (!result.value) return;
+
+  let match = result.value.match(/(.*?)(\d+([.,]\d+)?)$/);
+  if (!match) return;
+
+  result.value = match[1] + match[2] + "%";
+  autoCalculate();
 }
 
 /* ===================== CONTROL ===================== */
@@ -97,8 +127,13 @@ function clearResult() {
 }
 
 function backspace() {
-  let raw = displayToRaw(result.value).slice(0, -1);
-  result.value = renderExpression(raw);
+  result.value = result.value.slice(0, -1);
+
+  if (result.value.length === 0) {
+    calcul.value = "0";
+    return;
+  }
+
   autoCalculate();
 }
 
@@ -127,23 +162,56 @@ function updateHistory(item) {
   renderHistory();
 }
 
-function renderHistory() {
-  historyList.innerHTML = "";
-  const list = showAll ? history : history.slice(0, 5);
-
-  list.forEach((i) => {
-    const li = document.createElement("li");
-    li.textContent = i;
-    li.className = "history-item";
-    li.onclick = () => recall(i);
-    historyList.appendChild(li);
-  });
-}
-
 function recall(text) {
   const [exp, res] = text.split(" = ");
   result.value = exp;
   calcul.value = res;
+}
+
+function renderHistory() {
+  historyList.innerHTML = "";
+  const list = showAll ? history : history.slice(0, 5);
+
+  list.forEach((item) => {
+    const li = document.createElement("li");
+    li.textContent = item;
+    li.className = "history-item";
+
+    /* ========== CLICK (highlight) ========== */
+    li.addEventListener("click", () => {
+      document
+        .querySelectorAll(".history-item.high-light")
+        .forEach((el) => el.classList.remove("high-light"));
+
+      li.classList.add("high-light");
+    });
+
+    /* ========== DESKTOP: DOUBLE CLICK ========== */
+    li.addEventListener("dblclick", () => {
+      recall(item);
+      li.classList.remove("high-light");
+    });
+
+    /* ========== MOBILE: LONG PRESS ========== */
+    let pressTimer = null;
+
+    li.addEventListener("touchstart", () => {
+      pressTimer = setTimeout(() => {
+        recall(item);
+        li.classList.remove("high-light");
+      }, 600); // 600ms = long press
+    });
+
+    li.addEventListener("touchend", () => {
+      clearTimeout(pressTimer);
+    });
+
+    li.addEventListener("touchmove", () => {
+      clearTimeout(pressTimer);
+    });
+
+    historyList.appendChild(li);
+  });
 }
 
 /* ===================== BUTTON ===================== */
@@ -155,7 +223,7 @@ showAllBtn.onclick = () => {
     return;
   }
   showAll = !showAll;
-  showAllBtn.innerText = showAll ? "Hidden" : "Show All";
+  showAllBtn.innerText = showAll ? "Ẩn bớt" : "Xem tất cả";
   renderHistory();
 };
 
@@ -175,7 +243,7 @@ document.addEventListener("keydown", (e) => {
   if (!isNaN(e.key)) addToNumber(e.key);
   if ("+-*/".includes(e.key)) addToResult(e.key);
   if (e.key === "." || e.key === ",") addToNumber(".");
-  if (e.key === "(" || e.key === ")") addToResult(e.key);
+  if (e.key === "%") percent();
   if (e.key === "Enter") calculate();
   if (e.key === "Backspace") backspace();
   if (e.key === "Escape") clearResult();
