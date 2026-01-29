@@ -1,0 +1,94 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: "Times New Roman", Times, serif;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 1rem;
+}
+video {
+  display: none;
+  aspect-ratio: 9/16;
+  object-fit: cover;
+  width: calc(90% - 10px);
+}
+
+#select-file {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#btn-select,
+#select-again {
+  display: block;
+  margin: 10px 25px;
+  background-color: #8fa939;
+  color: #fff;
+  width: calc(50% - 20px);
+  height: 2rem;
+  align-content: center;
+  padding-left: 0.5rem;
+  border: solid thin #8fa939;
+  border-radius: 3px;
+  box-shadow: 1px 5px 8px #888;
+  font-size: 1.1rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+#btn-select:active,
+#select-again:active {
+  transform: scale(0.95);
+}
+#container-control-btn {
+  display: none;
+  margin-bottom: 2rem;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+#container-control-btn button {
+  height: 2rem;
+  width: 6rem;
+  background-color: #f5f4f4;
+  border: #888 thin solid;
+  border-radius: 3px;
+}
+#control-time {
+  width: 100%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+#control-time > input {
+  width: 85%;
+}
+
+#container-speed {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+#container-speed > label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+}
+#container-speed > label > input[type="radio"] {
+  width: 1.2rem;
+  height: 1.2rem;
+  accent-color: #8fa939;
+}
+#container-speed > label > span {
+  font-size: 1.1rem;
+}

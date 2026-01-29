@@ -12,6 +12,8 @@ const notification = document.getElementById("notification");
 let history = JSON.parse(localStorage.getItem("historyCalculator")) || [];
 let showAll = false;
 let justCalculated = false;
+let editOperation = false;
+let indexHistory = null;
 
 /* ===================== FORMAT ===================== */
 
@@ -23,13 +25,18 @@ function formatNumber(numStr) {
 
 function displayToRaw(str) {
   return str
+    .replace(/×/g, "*")
+    .replace(/÷/g, "/")
     .replace(/\./g, "")
     .replace(/,/g, ".")
     .replace(/(\d+(\.\d+)?)%/g, "($1/100)");
 }
 
 function renderExpression(raw) {
-  return raw.replace(/\d+(\.\d+)?/g, (m) => formatNumber(m));
+  return raw
+    .replace(/\d+(\.\d+)?/g, (m) => formatNumber(m))
+    .replace(/\*/g, "×")
+    .replace(/\//g, "÷");
 }
 
 /* ===================== VALIDATE ===================== */
@@ -49,11 +56,13 @@ function isValidExpression(exp) {
 
 function autoCalculate() {
   const raw = displayToRaw(result.value);
+
   if (!isValidExpression(raw)) return;
 
   try {
     const res = Function(`"use strict"; return (${raw})`)();
     const final = Number(Math.round(res + "e10") + "e-10");
+
     calcul.value = formatNumber(final.toString());
   } catch {}
 }
@@ -67,20 +76,36 @@ function addToNumber(n) {
     justCalculated = false;
   }
 
+  // 1️⃣ lấy raw
   let raw = displayToRaw(result.value);
-  let last = raw.split(/[+\-*/()]/).pop();
 
-  if (n === "." && last.includes(".")) return;
+  // 2️⃣ số cuối cùng
+  let lastNumber = raw.split(/[+\-*/()]/).pop();
 
-  result.value += n === "." ? "," : n;
+  // 3️⃣ chặn nhiều dấu thập phân
+  if (n === "." && lastNumber.includes(".")) return;
+
+  // 4️⃣ thêm vào raw
+  raw += n;
+
+  // 5️⃣ render lại UI
+
+  result.value = renderExpression(raw);
+
+  // 6️⃣ auto calc
   autoCalculate();
 }
 
 function addToResult(op) {
   if (!result.value) return;
-  if (/[+\-*/.%]$/.test(result.value)) return;
+  if (/[+\-×:%]$/.test(result.value)) return;
 
-  result.value += op;
+  const map = {
+    "*": "×",
+    "/": "÷",
+  };
+
+  result.value += map[op] || op;
   justCalculated = false;
 }
 
@@ -141,15 +166,30 @@ function calculate() {
   const raw = displayToRaw(result.value);
   if (!isValidExpression(raw)) return;
 
-  try {
-    const res = Function(`"use strict"; return (${raw})`)();
-    const final = Number(Math.round(res + "e10") + "e-10");
+  if (editOperation) {
+    try {
+      const res = Function(`"use strict"; return (${raw})`)();
+      const final = Number(Math.round(res + "e10") + "e-10");
 
-    calcul.value = formatNumber(final.toString());
-    updateHistory(`${result.value} = ${calcul.value}`);
-    justCalculated = true;
-  } catch {
-    calcul.value = "Lỗi";
+      calcul.value = formatNumber(final.toString());
+      updateOperationHistory(`${result.value} = ${calcul.value}`);
+      justCalculated = true;
+      editOperation = false;
+      indexHistory = null;
+    } catch {
+      calcul.value = "Lỗi";
+    }
+  } else {
+    try {
+      const res = Function(`"use strict"; return (${raw})`)();
+      const final = Number(Math.round(res + "e10") + "e-10");
+
+      calcul.value = formatNumber(final.toString());
+      updateHistory(`${result.value} = ${calcul.value}`);
+      justCalculated = true;
+    } catch {
+      calcul.value = "Lỗi";
+    }
   }
 }
 
@@ -158,6 +198,12 @@ function calculate() {
 function updateHistory(item) {
   history.unshift(item);
   if (history.length > 15) history.pop();
+  localStorage.setItem("historyCalculator", JSON.stringify(history));
+  renderHistory();
+}
+
+function updateOperationHistory(item) {
+  history[indexHistory] = item;
   localStorage.setItem("historyCalculator", JSON.stringify(history));
   renderHistory();
 }
@@ -172,7 +218,7 @@ function renderHistory() {
   historyList.innerHTML = "";
   const list = showAll ? history : history.slice(0, 5);
 
-  list.forEach((item) => {
+  list.forEach((item, index) => {
     const li = document.createElement("li");
     li.textContent = item;
     li.className = "history-item";
@@ -190,6 +236,9 @@ function renderHistory() {
     li.addEventListener("dblclick", () => {
       recall(item);
       li.classList.remove("high-light");
+      justCalculated = false;
+      editOperation = true;
+      indexHistory = index;
     });
 
     /* ========== MOBILE: LONG PRESS ========== */
@@ -199,6 +248,9 @@ function renderHistory() {
       pressTimer = setTimeout(() => {
         recall(item);
         li.classList.remove("high-light");
+        justCalculated = false;
+        editOperation = true;
+        indexHistory = index;
       }, 600); // 600ms = long press
     });
 

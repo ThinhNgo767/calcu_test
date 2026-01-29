@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Frame</title>
+    <link rel="stylesheet" href="video.css" />
+  </head>
+  <body>
+    <div id="select-file">
+      <input
+        type="file"
+        id="input-file"
+        accept="video/*"
+        style="display: none"
+      />
+
+      <button id="btn-select">Chọn Video</button>
+      <button id="select-again">Chọn Lại</button>
+    </div>
+
+    <video id="video" preload="metadata"></video>
+    <div id="control-time">
+      <input type="range" id="duration" min="0" value="0" />
+      <span id="current-time">0</span>
+    </div>
+    <div id="container-speed">
+      <label for="s-025"
+        ><input type="radio" name="speed" id="s-025" value="0.25" /><span
+          >0.25x</span
+        ></label
+      >
+      <label for="s-05"
+        ><input type="radio" name="speed" id="s-05" value="0.5" /><span
+          >0.5x</span
+        ></label
+      >
+      <label for="s-1"
+        ><input type="radio" name="speed" id="s-1" value="1" checked /><span
+          >1x</span
+        ></label
+      >
+      <label for="s-15"
+        ><input type="radio" name="speed" id="s15" value="1.5" /><span
+          >1.5x</span
+        ></label
+      >
+      <label for="s-2"
+        ><input type="radio" name="speed" id="s-2" value="2" /><span
+          >2x</span
+        ></label
+      >
+    </div>
+    <div id="container-control-btn">
+      <button id="back">« Back</button>
+      <button id="play-pause">Play</button>
+      <button id="next">Next »</button>
+    </div>
+
+    <script src="./video.js"></script>
+  </body>
+</html>

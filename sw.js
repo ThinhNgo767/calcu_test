@@ -4,6 +4,9 @@ const FILES = [
   "./index.html",
   "./index.css",
   "./index.js",
+  "./video/video.html",
+  "./video/video.js",
+  "./video/video.css",
   "./manifest.json",
 ];
 
