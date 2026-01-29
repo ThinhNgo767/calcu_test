@@ -17,7 +17,17 @@ video {
   object-fit: cover;
   width: calc(90% - 10px);
 }
+button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
 
+button:active {
+  transform: scale(0.95);
+}
 #select-file {
   width: 100%;
   display: flex;
@@ -41,10 +51,6 @@ video {
   font-size: 1.1rem;
   text-align: center;
   text-transform: uppercase;
-}
-#btn-select:active,
-#select-again:active {
-  transform: scale(0.95);
 }
 #container-control-btn {
   display: none;
