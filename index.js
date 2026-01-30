@@ -6,6 +6,7 @@ const historyList = document.getElementById("historyList");
 const showAllBtn = document.getElementById("full-history");
 const clearBtn = document.getElementById("clear-history");
 const notification = document.getElementById("notification");
+const sumBtn = document.getElementById("sum-selected");
 
 /* ===================== STATE ===================== */
 
@@ -14,6 +15,7 @@ let showAll = false;
 let justCalculated = false;
 let editOperation = false;
 let indexHistory = null;
+let listContent = [];
 
 /* ===================== FORMAT ===================== */
 
@@ -220,22 +222,50 @@ function renderHistory() {
 
   list.forEach((item, index) => {
     const li = document.createElement("li");
-    li.textContent = item;
     li.className = "history-item";
 
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.id = `checked-${index}`;
+    // Kiểm tra xem giá trị này đã có trong listContent chưa để giữ trạng thái check
+    const resValue = item.split(" = ")[1];
+    input.checked = listContent.includes(resValue);
+
+    const span = document.createElement("span");
+    span.textContent = item;
+
+    const btn = document.createElement("button");
+    btn.id = "delete-item";
+    btn.innerText = "Delete";
+
+    btn.addEventListener("click", function () {
+      history.splice(index, 1);
+      localStorage.setItem("historyCalculator", JSON.stringify(history));
+      renderHistory();
+    });
+
+    input.addEventListener("change", function () {
+      if (this.checked) {
+        if (!listContent.includes(resValue)) listContent.push(resValue);
+      } else {
+        const idx = listContent.indexOf(resValue);
+        if (idx > -1) listContent.splice(idx, 1);
+      }
+    });
+
     /* ========== CLICK (highlight) ========== */
-    li.addEventListener("click", () => {
+    span.addEventListener("click", () => {
       document
-        .querySelectorAll(".history-item.high-light")
+        .querySelectorAll(".high-light")
         .forEach((el) => el.classList.remove("high-light"));
 
-      li.classList.add("high-light");
+      span.classList.add("high-light");
     });
 
     /* ========== DESKTOP: DOUBLE CLICK ========== */
-    li.addEventListener("dblclick", () => {
+    span.addEventListener("dblclick", () => {
       recall(item);
-      li.classList.remove("high-light");
+      span.classList.remove("high-light");
       justCalculated = false;
       editOperation = true;
       indexHistory = index;
@@ -263,7 +293,58 @@ function renderHistory() {
     });
 
     historyList.appendChild(li);
+    li.appendChild(input);
+    li.appendChild(span);
+    li.appendChild(btn);
   });
+}
+
+sumBtn.onclick = () => {
+  if (listContent.length === 0) {
+    notification.innerText = "Vui lòng chọn ít nhất một số!";
+    setTimeout(() => (notification.innerText = ""), 2000);
+    return;
+  }
+
+  // Tính tổng
+  const total = listContent.reduce((acc, curr) => {
+    // Chuyển "1.234,56" thành "1234.56"
+    const rawValue = curr.replace(/\./g, "").replace(",", ".");
+    return acc + parseFloat(rawValue);
+  }, 0);
+
+  // Xử lý làm tròn để tránh lỗi số thập phân của JS (như 0.1 + 0.2)
+  const finalSum = Number(Math.round(total + "e10") + "e-10");
+
+  // Hiển thị kết quả lên màn hình máy tính
+  result.value = listContent.join(" + "); // Hiển thị biểu thức cộng
+  calcul.value = formatNumber(finalSum.toString());
+
+  // Đánh dấu để lần bấm số tiếp theo sẽ xóa màn hình
+  justCalculated = true;
+};
+
+function updateSelectedUI() {
+  const totalSpan = document.getElementById("totalSelected");
+
+  // Xóa danh sách cũ
+  selectedList.innerHTML = "";
+
+  // Hiển thị danh sách mới
+  listContent.forEach((val) => {
+    const li = document.createElement("li");
+    li.textContent = val;
+    selectedList.appendChild(li);
+  });
+
+  // Tính tổng các số đã chọn (nếu cần)
+  const sum = listContent.reduce((acc, curr) => {
+    // Chuyển đổi định dạng "1.234,56" về số thuần túy để tính toán
+    const cleanNum = curr.replace(/\./g, "").replace(",", ".");
+    return acc + parseFloat(cleanNum || 0);
+  }, 0);
+
+  totalSpan.textContent = formatNumber(sum.toString());
 }
 
 /* ===================== BUTTON ===================== */

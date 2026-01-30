@@ -33,6 +33,7 @@ button:active {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: #f0f4f9;
 }
 
 #btn-select,

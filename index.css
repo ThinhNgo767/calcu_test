@@ -73,9 +73,15 @@ button:active {
 }
 
 .history-container li {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
   cursor: pointer;
   font-size: 12px;
   border-bottom: 1px dashed #ccc;
+  margin: 3px 0;
 }
 .history-item {
   user-select: none;
@@ -96,7 +102,7 @@ footer {
   font-style: italic;
   color: #00a6f4;
 }
-li.high-light {
+span.high-light {
   color: #e7000b;
   background-color: #ffff00;
   font-weight: 400;
@@ -146,12 +152,15 @@ li.high-light {
   }
   input#calcul {
     font-size: 56px;
+    min-height: 80px;
   }
   input#result {
     font-size: 28px;
+    min-height: 60px;
   }
   #full-history,
-  #clear-history {
+  #clear-history,
+  #sum-selected {
     color: #f2f2f2;
     font-size: 1.2rem;
     width: max-content;
@@ -165,9 +174,24 @@ li.high-light {
   #clear-history {
     background-color: #888;
   }
+  #sum-selected {
+    background-color: #00a6f4;
+  }
+  #delete-item {
+    width: 3.4rem;
+    height: 1.6rem;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    background-color: #3d3d3d;
+    color: #fff;
+  }
   .history-container li {
     max-width: calc(100% - 20px);
     font-size: 20px;
-    padding: 3px 10px;
+    padding: 10px;
+  }
+  .history-container li > input {
+    width: 1.2rem;
+    height: 1.2rem;
   }
 }
