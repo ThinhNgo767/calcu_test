@@ -31,7 +31,7 @@ function displayToRaw(str) {
     .replace(/÷/g, "/")
     .replace(/\./g, "")
     .replace(/,/g, ".")
-    .replace(/(\d+(\.\d+)?)%/g, "($1/100)");
+    .replace(/([\d.,]+)%/g, "($1/100)");
 }
 
 function renderExpression(raw) {
@@ -310,7 +310,8 @@ sumBtn.onclick = () => {
   const total = listContent.reduce((acc, curr) => {
     // Chuyển "1.234,56" thành "1234.56"
     const rawValue = curr.replace(/\./g, "").replace(",", ".");
-    return acc + parseFloat(rawValue);
+    const num = parseFloat(rawValue);
+    return acc + (isNaN(num) ? 0 : num);
   }, 0);
 
   // Xử lý làm tròn để tránh lỗi số thập phân của JS (như 0.1 + 0.2)
@@ -326,16 +327,6 @@ sumBtn.onclick = () => {
 
 function updateSelectedUI() {
   const totalSpan = document.getElementById("totalSelected");
-
-  // Xóa danh sách cũ
-  selectedList.innerHTML = "";
-
-  // Hiển thị danh sách mới
-  listContent.forEach((val) => {
-    const li = document.createElement("li");
-    li.textContent = val;
-    selectedList.appendChild(li);
-  });
 
   // Tính tổng các số đã chọn (nếu cần)
   const sum = listContent.reduce((acc, curr) => {
@@ -361,11 +352,32 @@ showAllBtn.onclick = () => {
 };
 
 clearBtn.onclick = () => {
-  if (!confirm("Xóa toàn bộ lịch sử?")) return;
-  history = [];
-  localStorage.removeItem("historyCalculator");
-  clearResult();
-  renderHistory();
+  if (history.length === 0) {
+    return Swal.fire({
+      position: "center",
+      icon: "error",
+      title: "Không có lịch sử!",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  }
+  Swal.fire({
+    title: "Bạn có chắc muốn xóa?",
+    text: "Bạn sẽ không thể hoàn tác điều này!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#00a6f4",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Vâng, xóa nó đi!",
+    cancelButtonText: "Thôi! đừng xóa.",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      history = [];
+      localStorage.removeItem("historyCalculator");
+      clearResult();
+      renderHistory();
+    }
+  });
 };
 
 renderHistory();
