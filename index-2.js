@@ -250,6 +250,13 @@ function renderHistory() {
       else state.selectedItems.delete(item.id);
     });
 
+    li.querySelector("input").addEventListener("touchstart", (e) => {
+      e.stopPropagation(); // Ngăn không cho touch truyền lên thẻ li (không kích hoạt long press)
+    });
+    li.querySelector("input").addEventListener("click", (e) => {
+      e.stopPropagation(); // Đảm bảo click không truyền lên li
+    });
+
     li.querySelector(".history-text").addEventListener("click", () => {
       // Xóa highlight ở TẤT CẢ các dòng khác trước
       document.querySelectorAll(".history-text").forEach((el) => {
@@ -268,7 +275,6 @@ function renderHistory() {
       state.isEditing = true;
       state.editId = item.id;
       state.justCalculated = false;
-      saveAndRender();
     });
     li.addEventListener("touchstart", () => {
       state.pressTimer = setTimeout(() => {
@@ -279,7 +285,6 @@ function renderHistory() {
         state.editId = item.id;
         state.justCalculated = false;
       }, 600); // 600ms = long press
-      saveAndRender();
     });
 
     li.addEventListener("touchend", () => {
