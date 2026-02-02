@@ -7,6 +7,7 @@ const elements = {
   clearBtn: document.getElementById("clear-history"),
   notification: document.getElementById("notification"),
   sumBtn: document.getElementById("sum-selected"),
+  unselect: document.getElementById("unselect"),
 };
 
 /* ===================== STATE ===================== */
@@ -206,7 +207,10 @@ function calculate() {
 
   if (state.isEditing) {
     const idx = state.history.findIndex((item) => item.id === state.editId);
-    if (idx !== -1) state.history[idx].text = historyEntry;
+    if (idx !== -1) {
+      state.history[idx].text = historyEntry;
+      state.history[idx].value = res;
+    }
     state.isEditing = false;
     state.editId = null;
   } else {
@@ -264,6 +268,7 @@ function renderHistory() {
       state.isEditing = true;
       state.editId = item.id;
       state.justCalculated = false;
+      saveAndRender();
     });
     li.addEventListener("touchstart", () => {
       state.pressTimer = setTimeout(() => {
@@ -274,6 +279,7 @@ function renderHistory() {
         state.editId = item.id;
         state.justCalculated = false;
       }, 600); // 600ms = long press
+      saveAndRender();
     });
 
     li.addEventListener("touchend", () => {
@@ -357,6 +363,13 @@ elements.clearBtn.onclick = () => {
       renderHistory();
     }
   });
+};
+
+elements.unselect.onclick = () => {
+  elements.historyList.querySelectorAll("input").forEach((i) => {
+    i.checked = false;
+  });
+  state.selectedItems.clear();
 };
 
 renderHistory();

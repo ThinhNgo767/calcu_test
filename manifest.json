@@ -3,7 +3,7 @@
   "short_name": "Calculator",
   "start_url": "./index.html",
   "display": "standalone",
-  "theme_color": "#f79f1b",
+  "theme_color": "#8fa939",
   "background_color": "#ffffff",
   "icons": [
     { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
