@@ -3,7 +3,7 @@
   padding: 0;
 }
 body {
-  font-family: "Times New Roman", Times, serif;
+  font-family: "Roboto", sans-serif;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -18,6 +18,7 @@ video {
   width: calc(90% - 10px);
 }
 button {
+  font-family: "Roboto", sans-serif;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   -webkit-user-select: none;
@@ -28,30 +29,56 @@ button {
 button:active {
   transform: scale(0.95);
 }
-#select-file {
+svg.svg-inline--fa {
+  font-size: 1.4rem;
+}
+.container-header {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #f0f4f9;
+  margin-top: 0.5rem;
+}
+.toggle-menu {
+  width: 15%;
+  margin-left: 10px;
+}
+.bar-menu {
+  background-color: transparent;
+  color: #8fa939;
+  border: none;
+}
+.bar-menu > svg.svg-inline--fa {
+  font-size: 2.2rem;
+}
+#select-file {
+  width: 85%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #btn-select,
 #select-again {
   display: block;
-  margin: 10px 25px;
+  margin: 10px 15px;
   background-color: #8fa939;
   color: #fff;
-  width: calc(50% - 20px);
+  width: calc(40% - 10px);
   height: 2rem;
   align-content: center;
   padding-left: 0.5rem;
   border: solid thin #8fa939;
   border-radius: 3px;
-  box-shadow: 1px 5px 8px #888;
   font-size: 1.1rem;
   text-align: center;
   text-transform: uppercase;
+}
+#btn-select {
+  box-shadow: -2px 3px 3px 1px #556724;
+}
+#select-again {
+  box-shadow: 2px 3px 3px 1px #556724;
 }
 #container-control-btn {
   display: none;
@@ -62,11 +89,21 @@ button:active {
 }
 
 #container-control-btn button {
-  height: 2rem;
-  width: 6rem;
-  background-color: #f5f4f4;
+  height: 2.2rem;
+  width: 5.5rem;
+  background-color: transparent;
   border: #888 thin solid;
-  border-radius: 3px;
+  border-radius: 15px;
+  color: #8fa939;
+}
+#container-control-btn button:nth-child(1) {
+  box-shadow: -1px 3px 2px 1px;
+}
+#container-control-btn button:nth-child(2) {
+  box-shadow: 0px 3px 2px 1px;
+}
+#container-control-btn button:nth-child(3) {
+  box-shadow: 1px 3px 2px 1px;
 }
 #control-time {
   width: 100%;
@@ -101,7 +138,7 @@ button:active {
   font-size: 1.1rem;
 }
 #copy-by-box {
-  font-family: fantasy;
+  font-family: "Roboto", sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -117,7 +154,9 @@ button:active {
   height: 1rem;
   text-align: center;
   padding: 6px;
-  font-size: 1rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  line-height: 1;
   background-color: #8fa939;
   color: #f0f4f9;
   border-radius: 50%;
@@ -138,4 +177,42 @@ button:active {
 .copy-by-item:nth-child(3) {
   justify-content: center;
   align-items: center;
+}
+
+/*  */
+.sidepanel {
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  height: 50vh;
+  top: 0;
+  left: 0;
+  background-color: #6f862aaa;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+  border-radius: 0 10px 5px 0;
+}
+
+.sidepanel a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 20px;
+  text-transform: uppercase;
+  color: #1e260d;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidepanel .closebtn {
+  position: absolute;
+  top: 1%;
+  right: 3%;
+  background-color: transparent;
+  color: #1e260d;
+  border: none;
+}
+
+.sidepanel .closebtn svg {
+  font-size: 2rem;
 }

@@ -41,7 +41,7 @@ async function selectVideo(file) {
 }
 
 function generateThumbnail(file) {
-  return new Promise((resolve) => {
+  const thumbnail = new Promise((resolve) => {
     const video = document.createElement("video");
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
@@ -52,7 +52,7 @@ function generateThumbnail(file) {
     video.src = URL.createObjectURL(file);
 
     video.onloadedmetadata = () => {
-      video.currentTime = Math.min(1, video.duration / 2);
+      video.currentTime = Math.min(0.5, video.duration / 2);
     };
 
     video.onseeked = () => {
@@ -72,6 +72,8 @@ function generateThumbnail(file) {
 
     video.onerror = () => resolve(null);
   });
+  video.currentTime = 0;
+  return thumbnail;
 }
 
 file.addEventListener("change", async function () {
@@ -97,11 +99,11 @@ playPause.addEventListener("click", () => {
 
 // UI: Listen to the video to decide what the button says
 video.addEventListener("play", () => {
-  playPause.innerText = "Pause";
+  playPause.innerHTML = `<i class="fa-solid fa-pause"></i>`;
 });
 
 video.addEventListener("pause", () => {
-  playPause.innerText = "Play";
+  playPause.innerHTML = `<i class="fa-solid fa-play">`;
 });
 
 video.addEventListener("timeupdate", () => {
@@ -121,6 +123,7 @@ again.addEventListener("click", function () {
   controlButton.style.display = "none";
   speedBox.style.display = "none";
   document.getElementById("control-time").style.display = "none";
+  document.getElementById("current-time").innerText = "0";
 });
 
 durationRange.addEventListener("input", () => {
@@ -131,4 +134,22 @@ speedList.forEach((i) => {
   i.addEventListener("click", () => {
     video.playbackRate = i.value;
   });
+});
+
+function openNav() {
+  document.getElementById("mySidepanel").style.width = "250px";
+}
+
+function closeNav() {
+  document.getElementById("mySidepanel").style.width = "0";
+}
+
+document.addEventListener("click", function (e) {
+  const sidepanel = document.getElementById("mySidepanel");
+  const openButton = document.getElementById("openBtn"); // Nút để mở menu (nếu có)
+
+  // Nếu click KHÔNG nằm trong sidepanel VÀ KHÔNG phải là nút mở menu
+  if (!sidepanel.contains(e.target) && !openButton.contains(e.target)) {
+    closeNav();
+  }
 });
