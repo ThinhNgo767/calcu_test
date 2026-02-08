@@ -379,6 +379,9 @@ function renderHistory() {
       state.justCalculated = false;
       state.showHistory = false;
       document.getElementById("container-history").style.display = "none";
+      document.querySelectorAll(".history-text").forEach((el) => {
+        el.classList.remove("high-light");
+      });
     });
     li.addEventListener("touchstart", () => {
       state.pressTimer = setTimeout(() => {
@@ -390,6 +393,9 @@ function renderHistory() {
         state.justCalculated = false;
         state.showHistory = false;
         document.getElementById("container-history").style.display = "none";
+        document.querySelectorAll(".history-text").forEach((el) => {
+          el.classList.remove("high-light");
+        });
       }, 600); // 600ms = long press
     });
 
