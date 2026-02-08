@@ -18,7 +18,7 @@ input {
   position: relative;
   box-sizing: border-box;
   width: calc(100% - 5px);
-  margin-bottom: 15px;
+  margin-bottom: 8px;
   background-color: #f8f8f8;
 }
 
@@ -47,6 +47,7 @@ input {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
+  margin-bottom: 8px;
 }
 
 button {

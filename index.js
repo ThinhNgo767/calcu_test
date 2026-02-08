@@ -52,10 +52,6 @@ const Formatter = {
   },
 };
 
-function haptic() {
-  if (navigator.vibrate) navigator.vibrate(10);
-}
-
 /* ===================== VALIDATE ===================== */
 
 function isValidExpression(exp) {
@@ -416,6 +412,7 @@ function renderHistory() {
       state.history = state.history.filter((i) => i.id !== item.id);
       state.selectedItems.delete(item.id);
       saveAndRender();
+      totalOfCalculationsChecked();
     });
 
     elements.historyList.appendChild(li);
