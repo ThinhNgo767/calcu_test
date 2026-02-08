@@ -18,7 +18,6 @@ input {
   position: relative;
   box-sizing: border-box;
   width: calc(100% - 5px);
-  height: 20%;
   margin-bottom: 15px;
   background-color: #f8f8f8;
 }
@@ -30,7 +29,6 @@ input {
   outline: none;
   color: #1e260d;
   background-color: #f8f8f8;
-  padding: 10px;
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
@@ -153,25 +151,35 @@ button.history-btn {
     padding: 0;
     border: none;
     border-radius: 0;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
+  .container {
+    flex: 0 0 30%;
+  }
 
   .calculator .buttons {
     grid-template-columns: repeat(4, 1fr);
     flex-grow: 1; /* Đẩy các nút chiếm không gian còn lại */
-    align-content: flex-start;
+    align-content: space-evenly;
     grid-gap: 15px;
     padding: 0 10px;
+    flex: 0 0 70%;
   }
   .calculator button {
     width: 80px; /* Nút to hơn trên mobile cho dễ bấm */
     height: 80px;
     font-size: 36px;
   }
-  .calculator button:active {
+  .calculator button .container-history button {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .calculator button:active,
+  .container-history button:active {
     transform: scale(0.95);
   }
   .calculator button.bgcolor--orange {
@@ -186,17 +194,19 @@ button.history-btn {
     font-size: 24px;
   }
   .container-btn {
-    padding: 0.5rem 0;
-    margin: 1rem 0.5rem;
+    padding: 1rem 0;
+    margin: 0;
     border-bottom: #ccc dashed 1px;
     border-top: #ccc dashed 1px;
   }
   div#calcul {
-    font-size: 56px;
+    height: 60%;
+    font-size: 60px;
     min-height: 100px;
   }
   div#result {
-    font-size: 28px;
+    height: 40%;
+    font-size: 36px;
     min-height: 60px;
   }
   #full-history,
@@ -247,9 +257,9 @@ button.history-btn {
     accent-color: #6f862a;
   }
   button.history-btn {
-    width: 110px;
-    height: 40px;
-    font-size: 20px;
+    width: 115px;
+    height: 50px;
+    font-size: 24px;
   }
   .total-box {
     width: calc(100% - 10px);
@@ -283,6 +293,9 @@ button.history-btn {
     font-size: 1.5rem;
     font-weight: bold;
     background-color: #fff;
+    color: #1f290a;
+  }
+  .total-input:disabled {
     color: #1f290a;
   }
   .fa-right-from-bracket {

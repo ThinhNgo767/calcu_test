@@ -52,6 +52,10 @@ const Formatter = {
   },
 };
 
+function haptic() {
+  if (navigator.vibrate) navigator.vibrate(10);
+}
+
 /* ===================== VALIDATE ===================== */
 
 function isValidExpression(exp) {
