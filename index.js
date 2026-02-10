@@ -299,6 +299,7 @@ function calculate() {
   }
 
   elements.calcul.innerText = formattedRes;
+  elements.result.innerText = formattedRes;
   state.justCalculated = true;
   saveAndRender();
 }
@@ -413,6 +414,11 @@ function renderHistory() {
       state.selectedItems.delete(item.id);
       saveAndRender();
       totalOfCalculationsChecked();
+
+      if (state.history?.length === 0 && state.checkedAll) {
+        state.checkedAll = false;
+        elements.unselect.innerHTML = `<i class="fa-solid fa-square-check"></i> SelectAll`;
+      }
     });
 
     elements.historyList.appendChild(li);
@@ -483,7 +489,8 @@ elements.clearBtn.onclick = () => {
       state.selectedItems.clear();
       elements.checkedResult.value = "0";
       localStorage.removeItem("historyCalculator");
-      clearResult();
+      state.checkedAll = false;
+      elements.unselect.innerHTML = `<i class="fa-solid fa-square-check"></i> SelectAll`;
       renderHistory();
     }
   });
