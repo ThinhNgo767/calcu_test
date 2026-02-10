@@ -298,7 +298,7 @@ function calculate() {
     if (state.history.length > 15) state.history.pop();
   }
 
-  elements.calcul.innerText = formattedRes;
+  elements.calcul.innerText = 0;
   elements.result.innerText = formattedRes;
   state.justCalculated = true;
   saveAndRender();
